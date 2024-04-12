@@ -17,7 +17,16 @@ class ProjectController extends Controller
     {
         $projects = Project::select(['id', 'type_id', 'title', 'content', 'image'])
             ->with(['type:id,label,color', 'technologies:id,label,color'])
+            ->orderBy('created_at', 'DESC')
             ->paginate();
+
+
+        foreach ($projects as $project) {
+            $project->image = !empty($project->image) ? asset('/storage/' . $project->image) : 'https://placehold.co/600x400';
+        }
+
+
+
         return response()->json($projects);
     }
 
